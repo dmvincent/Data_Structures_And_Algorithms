@@ -1,0 +1,26 @@
+#include <iostream>
+#include <unordered_set>
+#include <vector>
+#include <set>
+
+class Solution {
+public:
+    int missingNumber(std::vector<int>& nums) {
+        int x, ans{0};
+        std::set<int> s1(nums.begin(), nums.end());        
+        for(auto& val: s1) {
+            if(val != ans)
+                break;
+            ans++;
+        }        
+        return ans;
+    }
+};
+
+int main() {
+    Solution s1;
+    std::vector<int> nums{3,0,1};
+    int res = s1.missingNumber(nums);
+    std::cout << res << std::endl;
+    return 0;
+}
