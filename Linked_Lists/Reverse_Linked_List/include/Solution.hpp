@@ -5,31 +5,43 @@ class Solution {
 public:
     ListNode* reverseBetween(ListNode* head, int left, int right) {
         ListNode* curr = head;
-        ListNode* prev = new ListNode();
+        ListNode* prev = nullptr;
+        ListNode* currNext = nullptr;
+        ListNode* lastUnsorted = nullptr;
+        ListNode* firstSorted  = nullptr;
 
         // Iterate throught list at most 'right times'
         int i = 1;
-        while(i < (right-left+1)) {
-            curr = curr->next;
-            //if(i == (right-left)) {
-            //    prev = curr;
-            //}
-            i++;
+        if(curr->next == nullptr)
+            return head;
+        if(left == right)
+            return head;
+        while(i <= right) {
+           if(i <= left) {
+               if(i == left) {
+                 firstSorted = curr;
+                 lastUnsorted = prev;
+               }
+               prev = curr;
+               curr = curr->next;
+               i++;
+           }
+           else {
+               currNext = curr->next;
+               curr->next = prev;
+               prev = curr;
+               curr = currNext;
+               i++;
+           }
         }
-        while(i < right) {
-            // Stor the current node as 'prev' so that, once you switch 'curr' to 'curr.next',
-            // you can assign the new curr
-            prev = curr;
-            curr = curr->next;
-            curr
-
-            /***** Start reversing *****/
-            
-              
-          
-            i++;
+        if(lastUnsorted != nullptr) {
+            lastUnsorted->next = prev;
         }
-        //printSubList(dLeft, dRight);
+        else {
+            head = prev;
+        }
+        firstSorted->next = curr;
+        return head;
     }
     
     void printList(ListNode* head) {
