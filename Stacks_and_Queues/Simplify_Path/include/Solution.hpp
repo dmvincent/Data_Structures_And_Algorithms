@@ -1,24 +1,45 @@
 #include <iostream>
+#include <unordered_map>
+#include <set>
+#include <stack>
 
 class Solution {
 public:
     std::string simplifyPath(std::string path) {
-        std::string ans;
-        
-        for(int i = 0; i != path.size(); i++){
-            if(path[i] == '.' || path[i] == '/') {
-                if(path[i] == '.') {
-                    if(ans.back() == '.')
-                        ans.pop_back();
-                }
-                if(path[i] == '/') {
+        std::string ans = "/";
+        std::stack<std::string> dir;
+        std::stack<std::string> swap;
 
-                }
-            } else {
-                ans.push_back(path[i]);
+        int i = 0;
+        while(i < path.size()) {
+            std::string val = "";
+            while(path[i] != '/' && i < path.size()) {
+                val.push_back(path[i]);
+                i++;
             }
-        }
 
-        return ans; 
+            if(val == ".." && dir.size() == 0) {
+            }
+            else if(val == "..") {
+                dir.pop();
+            }
+            else if(val != "." && val != ""){
+                dir.push(val);
+            }
+
+            i++;
+        }
+        while(!dir.empty()) {
+            swap.push(dir.top());
+            dir.pop();
+        }
+        while(!swap.empty()) {
+            if(swap.size() == 1)
+                ans = ans+swap.top();
+            else
+                ans = ans+swap.top()+"/";
+            swap.pop();
+        }
+        return ans;
     }
 };
