@@ -1,0 +1,32 @@
+#include <iostream>
+#include <unordered_map>
+#include <set>
+#include <vector>
+
+class Solution {
+public:
+    int countElements(std::vector<int>& arr) {
+        std::unordered_map<int, int> map;        
+        std::set<int> seen;
+        int count{0};
+        for(auto i: arr)
+            map[i+1]++; 
+        for(auto i: arr) {
+            if(seen.find(i) != seen.end())
+                continue;
+            if(map.find(i) != map.end())
+                count += map[i];
+            seen.insert(i);
+        }
+        return count;
+    }
+};
+
+int main() {
+    std::vector<int> arr {1,3,2,3,5,0};
+    Solution s1;
+    int ans = s1.countElements(arr);
+    std::cout << "Answer is: " << ans << std::endl;
+
+    return 0;
+}
