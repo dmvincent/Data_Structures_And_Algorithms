@@ -11,51 +11,41 @@ struct TreeNode {
 
 class Solution {
 public:
-//    int dfs(TreeNode* root) {
-//        int count = 1;
-//        // Provide Base Case
-//        if (root == NULL) {
-//            return 0;
-//        }
-//        int left = dfs(root->left);
-//        int right = dfs(root->right);
-//        int longer = std::max(left,right);
-//        return longer + count;
-//    }
-
-    int diameterOfBinaryTree(TreeNode* root) {
-//        int leftCount = dfs(root->left);
-//        int rightCount = dfs(root->right);
-//
-//        return leftCount + rightCount; 
-        int count = 1;
+    int diameter;
+    int dfs(TreeNode* root) {
         // Provide Base Case
         if (root == NULL) {
             return 0;
         }
         int left = dfs(root->left);
         int right = dfs(root->right);
+        this->diameter = std::max(this->diameter,(left+right));
         int longer = std::max(left,right);
-        return longer + count;
+        return ++longer;
+    }
 
+    int diameterOfBinaryTree(TreeNode* root) {
+        this->diameter = 0;
+        dfs(root);
+        return this->diameter; 
     }
 };
 
 int main() {
-    //TreeNode aLbL(4);
-    //TreeNode aLbR(5);
-    //TreeNode aL(2);
-    //TreeNode aR(3);
-    //TreeNode root(1);
-
-    //root.left = &aL;
-    //root.right = &aR;
-    //aL.left = &aLbL;
-    //aL.right = &aLbR;
-
+    TreeNode aLbL(4);
+    TreeNode aLbR(5);
+    TreeNode aL(2);
+    TreeNode aR(3);
     TreeNode root(1);
-    TreeNode aL(1);
+
     root.left = &aL;
+    root.right = &aR;
+    aL.left = &aLbL;
+    aL.right = &aLbR;
+
+    //TreeNode root(1);
+    //TreeNode aL(1);
+    //root.left = &aL;
 
     Solution s1;
     int ans = s1.diameterOfBinaryTree(&root);
