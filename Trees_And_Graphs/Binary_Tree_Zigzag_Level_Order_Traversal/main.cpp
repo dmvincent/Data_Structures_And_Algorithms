@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <deque>
-#include <stack>
 
 struct TreeNode {
     int val;
