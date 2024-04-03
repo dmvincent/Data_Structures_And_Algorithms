@@ -14,12 +14,19 @@ struct TreeNode {
 class Solution {
 public:
     double min = std::numeric_limits<double>::max();
-    int ans;
+    int ans, highBound, lowBound;
+    bool visitedHigh = false;
+    bool visitedLow = false;
     int dfsClosest(TreeNode* root, double target) {
       if(root == NULL) {
         return ans;
       }
-
+      if(root->val == highBound) {
+        visitedHigh = true;
+      }
+      if(root->val == lowBound) {
+        visitedLow = true;
+      }
       double currentMin = fabs(target - static_cast<double>(root->val));
       if(currentMin <= min) {
         if(currentMin == min) {
@@ -28,6 +35,9 @@ public:
           min = currentMin;
           ans = root->val;
         }
+      }
+      if(visitedHigh && visitedLow) {
+        return ans;
       }
 
       if(root->val > target) {
@@ -41,8 +51,8 @@ public:
     }
 
     int closestValue(TreeNode* root, double target) {
-      int lowBound = static_cast<int>(target);
-      int highBound = lowBound + 1;
+      lowBound = static_cast<int>(target);
+      highBound = lowBound + 1;
       if(root->left == NULL && root->right == NULL)
         return root->val;
       return dfsClosest(root, target);
