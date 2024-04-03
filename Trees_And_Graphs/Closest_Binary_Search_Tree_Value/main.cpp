@@ -1,5 +1,6 @@
 #include <iostream>
 #include <limits.h>
+#include <math.h>
 
 struct TreeNode {
     int val;
@@ -12,36 +13,39 @@ struct TreeNode {
 
 class Solution {
 public:
-    int dfsClosest(TreeNode* root, double target, int smaller, int larger) {
-      int ans;
-      if(static_cast<double>(smaller) <= target  && target <= static_cast<double>(larger)) {
-        double smallDiff = target - smaller;
-        double largeDiff = larger - target;
-        return (smallDiff < largeDiff)?smaller:larger;
+    double min = std::numeric_limits<double>::max();
+    int ans;
+    int dfsClosest(TreeNode* root, double target) {
+      if(root == NULL) {
+        return ans;
+      }
+
+      double currentMin = fabs(target - static_cast<double>(root->val));
+      if(currentMin <= min) {
+        if(currentMin == min) {
+          ans = std::min(ans, root->val);
+        } else {
+          min = currentMin;
+          ans = root->val;
+        }
       }
 
       if(root->val > target) {
-        if(root->left == NULL)
-          return root->val;
-        smaller = root->left->val;
-        larger = root->val;
-        ans = dfsClosest(root->left, target, smaller, larger);
+        ans = dfsClosest(root->left, target);        
       }
 
       if(root->val < target) {
-        if(root->right == NULL)
-          return root->val;
-        smaller = root->val;
-        larger = root->right->val;
-        ans = dfsClosest(root->right, target, smaller, larger);
+        ans = dfsClosest(root->right, target);        
       }
       return ans;
     }
 
     int closestValue(TreeNode* root, double target) {
+      int lowBound = static_cast<int>(target);
+      int highBound = lowBound + 1;
       if(root->left == NULL && root->right == NULL)
         return root->val;
-      return dfsClosest(root, target, root->val, root->val);
+      return dfsClosest(root, target);
     }
 };
 
