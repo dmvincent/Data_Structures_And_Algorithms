@@ -41,8 +41,6 @@ public:
     }
 
     int closestValue(TreeNode* root, double target) {
-      int lowBound = static_cast<int>(target);
-      int highBound = lowBound + 1;
       if(root->left == NULL && root->right == NULL)
         return root->val;
       return dfsClosest(root, target);
