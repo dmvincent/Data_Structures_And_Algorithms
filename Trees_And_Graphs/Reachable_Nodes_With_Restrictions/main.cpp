@@ -15,7 +15,7 @@ public:
 
   }
   
-  void dfs(std::unordered_map<int, std::vector<int>> hash_map, std::vector<int>& seen, int source, int& ans) {
+  void dfs(std::unordered_map<int, std::vector<int>>& hash_map, std::vector<int>& seen, int source, int& ans) {
     if(!seen[source]) {
       seen[source] = 1;
       ans++;
