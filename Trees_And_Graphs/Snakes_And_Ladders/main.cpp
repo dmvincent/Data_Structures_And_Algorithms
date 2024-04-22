@@ -10,50 +10,27 @@ public:
   std::vector<int> getNodeIndices(int nodePos, int n) {
     std::vector<int> matrixPos(2);
     int row, col;
-    if(n%2 == 0) {
-      // Get Row
+
+    // Get the row
+    if(nodePos%n == 0)
+      row = n - (nodePos/n);
+    else
+      row = (n-1) - (nodePos/n);
+
+    // Get Column
+    if((n - row) % 2) {
       if(nodePos%n == 0)
-        row = n - nodePos/n;
+        col = n-1;
       else
-        row = n - nodePos/n - 1;
-                                        
-      // Get Column
-      if(row%2) {
-        if(nodePos%n == 0)
-          col = n-1;
-        else {
-          col = (nodePos % n) - 1;
-        }
-      }
-      else 
-        if(nodePos%n == 0)
-          col = 0;
-        else
-          col = n - (nodePos % n);
+        col = (nodePos % n) - 1;
     }
-    else { 
-      // Get Row
+    else {
       if(nodePos%n == 0)
-        row = n - nodePos/n;
+        col = 0;
       else
-        row = n - nodePos/n - 1;
-                                        
-      // Get Column
-      if(row%2) {
-        if(nodePos%n == 0)
-          col = 0;
-        else {
-          col = n - (nodePos % n);
-        }
-      }
-      else 
-        if(nodePos%n == 0)
-          col = 0;
-        else
-          col = n - (nodePos % n);
+        col = (n - 1) - ((nodePos%n) - 1);
     }
 
-    // Prepare return value
     matrixPos[0] = row;
     matrixPos[1] = col;
     return matrixPos;
@@ -72,14 +49,6 @@ public:
     std::set<int> set;
     int curr_steps{0};
     int curr{0};
-    //for(int i = n*n; i >= 1; i--) {
-    //  std::vector<int> nodePos = getNodeIndices(i, n);
-    //  std::cout << nodePos[0] << ", " << nodePos[1] << "  ";
-    //  if(i%n == 1)
-    //    std::cout << std::endl;
-    //}
-    std::vector<int> pose = getNodeIndices(6, n);
-    std::cout << "Board Position 6 is: " << pose[0] << ", " << pose[1] << std::endl;
 
     while(!queue.empty()) {
       state = queue.front();
@@ -100,12 +69,6 @@ public:
           addNode[0] = i;
           addNode[1] = curr_steps + 1;
         }
-
-        //if(addNode[0] == n*n) {
-        //  std::cout << "From board position " << curr << ", we have found " << n*n << " while steps is " << state[1] << std::endl;
-        //  std::cout << i << ": " << nodeLoc[0] << ", " << nodeLoc[1] << std::endl;
-        //  std::cout << "============================" << std::endl;
-        //}
 
         if(set.find(addNode[0]) == set.end()) {
           queue.push(addNode);
