@@ -58,21 +58,20 @@ public:
         return curr_steps;
       queue.pop();
       for(int i = curr + 1; i <= std::min(curr + 6, n*n); i++) {
-        nodeLoc = getNodeIndices(i, n);
-        
-        // Determine if nodeLoc has a Snake or Ladder
-        if(board[nodeLoc[0]][nodeLoc[1]] != -1) {
-          addNode[0] = board[nodeLoc[0]][nodeLoc[1]];
-          addNode[1] = curr_steps + 1;
-        }
-        else {
-          addNode[0] = i;
-          addNode[1] = curr_steps + 1;
-        }
+        if(set.find(i) == set.end()) {
+          set.insert(i);
+          nodeLoc = getNodeIndices(i, n);
+          // Determine if nodeLoc has a Snake or Ladder
+          if(board[nodeLoc[0]][nodeLoc[1]] != -1) {
+            addNode[0] = board[nodeLoc[0]][nodeLoc[1]];
+            addNode[1] = curr_steps + 1;
+          }
+          else {
+            addNode[0] = i;
+            addNode[1] = curr_steps + 1;
+          }
 
-        if(set.find(addNode[0]) == set.end()) {
           queue.push(addNode);
-          set.insert(addNode[0]);
         }
       }
     }
@@ -82,8 +81,8 @@ public:
 };
 
 int main() {
-  //std::vector<std::vector<int>> board {{-1,-1,-1,-1,-1,-1},{-1,-1,-1,-1,-1,-1},{-1,-1,-1,-1,-1,-1},{-1,35,-1,-1,13,-1},{-1,-1,-1,-1,-1,-1},{-1,15,-1,-1,-1,-1}};
-  std::vector<std::vector<int>> board {{-1,-1,19,10,-1},{2,-1,-1,6,-1},{-1,17,-1,19,-1},{25,-1,20,-1,-1},{-1,-1,-1,-1,15}};
+  std::vector<std::vector<int>> board {{-1,-1,-1,-1,-1,-1},{-1,-1,-1,-1,-1,-1},{-1,-1,-1,-1,-1,-1},{-1,35,-1,-1,13,-1},{-1,-1,-1,-1,-1,-1},{-1,15,-1,-1,-1,-1}};
+  //std::vector<std::vector<int>> board {{-1,-1,19,10,-1},{2,-1,-1,6,-1},{-1,17,-1,19,-1},{25,-1,20,-1,-1},{-1,-1,-1,-1,15}};
   Solution s1;
   int ans = s1.snakesAndLadders(board);
   std::cout << "Answer: " << ans << std::endl;
