@@ -7,33 +7,27 @@ class Solution {
 public:
 
   // Helper function to get node indices from node position
-  std::vector<int> getNodeIndices(int nodePos, int n) {
-    std::vector<int> matrixPos(2);
-    int row, col;
-
+  void getNodeIndices(int nodePos, int n, std::vector<int>& matrixPos) {
     // Get the row
     if(nodePos%n == 0)
-      row = n - (nodePos/n);
+      matrixPos[0] = n - (nodePos/n);
     else
-      row = (n-1) - (nodePos/n);
+      matrixPos[0] = (n-1) - (nodePos/n);
 
     // Get Column
-    if((n - row) % 2) {
+    if((n - matrixPos[0]) % 2) {
       if(nodePos%n == 0)
-        col = n-1;
+        matrixPos[1] = n-1;
       else
-        col = (nodePos % n) - 1;
+        matrixPos[1] = (nodePos % n) - 1;
     }
     else {
       if(nodePos%n == 0)
-        col = 0;
+        matrixPos[1] = 0;
       else
-        col = (n - 1) - ((nodePos%n) - 1);
+        matrixPos[1] = (n - 1) - ((nodePos%n) - 1);
     }
 
-    matrixPos[0] = row;
-    matrixPos[1] = col;
-    return matrixPos;
   }
 
   int snakesAndLadders(std::vector<std::vector<int>>& board) {
@@ -47,35 +41,29 @@ public:
     std::vector<int> nodeLoc(2);
     std::vector<int> state(2);
     std::set<int> set;
-    int curr_steps{0};
-    int curr{0};
 
     while(!queue.empty()) {
       state = queue.front();
-      curr = state[0];
-      curr_steps = state[1];
-      if(curr == n*n)
-        return curr_steps;
+      if(state[0] == n*n)
+        return state[1];
       queue.pop();
-      for(int i = curr + 1; i <= std::min(curr + 6, n*n); i++) {
+      for(int i = state[0] + 1; i <= std::min(state[0] + 6, n*n); i++) {
         if(set.find(i) == set.end()) {
           set.insert(i);
-          nodeLoc = getNodeIndices(i, n);
+          getNodeIndices(i, n, nodeLoc);
           // Determine if nodeLoc has a Snake or Ladder
           if(board[nodeLoc[0]][nodeLoc[1]] != -1) {
             addNode[0] = board[nodeLoc[0]][nodeLoc[1]];
-            addNode[1] = curr_steps + 1;
+            addNode[1] = state[1] + 1;
           }
           else {
             addNode[0] = i;
-            addNode[1] = curr_steps + 1;
+            addNode[1] = state[1] + 1;
           }
-
           queue.push(addNode);
         }
       }
     }
-
     return -1;
   }
 };
