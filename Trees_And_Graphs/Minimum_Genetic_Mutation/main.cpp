@@ -2,56 +2,62 @@
 #include <vector>
 #include <set>
 #include <queue>
-//#include <pair>
+#include <unordered_map>
 
 class Solution {
 public:
   int minMutation(std::string startGene, std::string endGene, std::vector<std::string>& bank) {
-    std::set<std::string> allowed(bank.begin(), bank.end());
-    int count{0};
-    
-    // Make sure that the endGene is a valud gene
-    if(allowed.find(endGene) == allowed.end()) {
-      return -1;
-    }
-
-    // Create of set containing the indices of startGene that differ fron endGene
-    std::set<int> mutate;
-    for(int i = 0; i != startGene.size(); i++) {
-      if(startGene[i] != endGene[i])
-        mutate.insert(i);
-    }
-
-    std::queue<std::pair<std::string, int>> queue;
-    queue.push(std::make_pair(startGene, 0));
-    std::queue<int> removeQueue;
-
-    int tempSteps{0};
-    while(!queue.empty()) {
-      auto [temp, steps] = queue.front();
-      if(temp == endGene)
-        return steps;
-      queue.pop();
-      std::string newTemp;
-      for(auto iter = mutate.begin(); iter != mutate.end(); iter++) {
-        newTemp = temp;
-        newTemp[*iter] = endGene[*iter];
-        std::cout << newTemp << std::endl;
-        if(allowed.find(newTemp) != allowed.end()) {
-          std::cout << "Hello" << std::endl;
-          queue.push(std::make_pair(newTemp, steps + 1));
-          removeQueue.push(*iter);
-          //mutate.erase(*iter);
+    // Create the Hash Map
+    std::unordered_map<std::string, std::vector<std::string>> hash_map;
+    for(int i = 0; i < bank.size(); i++) {
+      for(int j = i + 1; j < bank.size(); j++) {
+        int count = 0;
+        for(int q = 0; q != bank[0].size(); q++) {
+          if(bank[i][q] != bank[j][q]) {
+            count++;
+          }
+        }
+        if(count == 1) {
+          hash_map[bank[i]].push_back(bank[j]);
+          hash_map[bank[j]].push_back(bank[i]);
         }
       }
-      while(!removeQueue.empty()) {
-        mutate.erase(removeQueue.front());
-        removeQueue.pop();
+      
+      // Include startGene in the hash map
+      int count = 0;
+      for(int q = 0; q != bank[0].size(); q++) {
+        if(bank[i][q] != startGene[q]) {
+            count++;
+        }
+        
+      }
+      if(count == 1) {
+        hash_map[bank[i]].push_back(startGene);
+        hash_map[startGene].push_back(bank[i]);
       }
     }
 
-    std::cout << tempSteps << std::endl;
-  return -1;
+    // Perform BFS by pushing a endGene to hash_map, and push neighbors to queue
+    std::queue<std::pair<std::string, int>> queue;
+    queue.push(std::make_pair(endGene,0));
+    std::set<std::string> seen;
+    
+    seen.insert(endGene);
+    while(!queue.empty()) {
+      auto [node, steps] = queue.front();
+      if(node == startGene) {
+        return steps;
+      }
+      queue.pop();
+      for(auto iter = hash_map[node].begin(); iter != hash_map[node].end(); iter++) {
+        //int nextStep = steps + 1;
+        if(seen.find(*iter) == seen.end()) {
+          seen.insert(*iter);
+          queue.push(std::make_pair(*iter, steps + 1));
+        }
+      }
+    }
+    return -1;
   }
 };
 
