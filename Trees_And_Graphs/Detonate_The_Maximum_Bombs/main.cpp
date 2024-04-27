@@ -48,38 +48,40 @@ public:
     std::cout << "=================" << std::endl;
 
     // Perform BFS 
-    std::unordered_map<int,int> seen(bombs.size());
-    std::queue<int> queue;
+    std::unordered_map<int,int> chainReaction(bombs.size());
+    std::set<int> seen;
     int max{INT_MIN}, curr{0};
     for(auto iter = hash_map.begin(); iter != hash_map.end(); iter++) {
-      curr = dfs(iter->first, hash_map, seen, max);
+      curr = dfs(iter->first, hash_map, chainReaction, max, seen);
       if(curr > max)
         max = curr;
     }
-    if(curr > max)
-      max = curr;
+    
+    for(auto iter = chainReaction.begin(); iter != chainReaction.end(); iter++) {
+      std::cout << iter->first << ": " << iter->second << std::endl;
+    }
 
     return max;      
   }
 
-  int dfs(int node, std::unordered_map<int, std::vector<int>>& hash_map, std::unordered_map<int, int>& seen, int& max) {
+  int dfs(int node, std::unordered_map<int, std::vector<int>>& hash_map, std::unordered_map<int, int>& chainReaction, int& max, std::set<int>& seen) {
     std::cout << "Visiting node " << node << std::endl;
     int totalBombs = 0;
     if(seen.find(node) == seen.end()) {
+      seen.insert(node);
       for(int i = 0; i < hash_map[node].size(); i++) {
-        if(seen.find(hash_map[node][i]) == seen.end())
-          totalBombs = totalBombs + dfs(hash_map[node][i], hash_map, seen, max);
-        else
-          totalBombs = totalBombs + seen[hash_map[node][i]];
+        if(hash_map.find(hash_map[node][i]) != hash_map.end()) {
+          // new candidate node definitely has some bombs it will set off and 'i'
+          // definitely exists as a key in hash_map
+          totalBombs += dfs(hash_map[node][i], hash_map, chainReaction, max, seen);
+        } else {
+          totalBombs++;
+        }
       }
-      seen[node] = ++totalBombs;
-      if(totalBombs > max)
-        max = totalBombs;
-      return totalBombs;
+      chainReaction[node] = ++totalBombs;
     }
-    if(seen.find(node) != seen.end()) {
-      // Then you have reached the tail
-      return seen[node];
+    else {
+      totalBombs = chainReaction[node];
     }
     return totalBombs;
   }
@@ -89,12 +91,9 @@ int main() {
 
   //std::vector<std::vector<int>> bombs{{2,1,3},{6,1,4}};
   //std::vector<std::vector<int>> bombs{{1,1,5},{10,10,5}};
-  std::vector<std::vector<int>> bombs{{1,2,3},{2,3,1},{3,4,2},{4,5,3},{5,6,4}};
+  //std::vector<std::vector<int>> bombs{{1,2,3},{2,3,1},{3,4,2},{4,5,3},{5,6,4}};
+  std::vector<std::vector<int>> bombs{{868,658,84},{82,386,48},{464,157,11},{422,654,85},{864,418,84},{366,314,72},{955,270,60},{460,98,60},{824,147,38},{580,660,27},{423,102,73},{317,471,74}};
 
-  for(int i = 0; i < bombs.size(); i++) {
-    std::cout << "Radius for node " << i << " is " << bombs[i][2] << std::endl;
-  }
-  std::cout << "===============" << std::endl;
   Solution s1;
   int ans = s1.maximumDetonation(bombs);
   std::cout << "Answer: " << ans << std::endl;
