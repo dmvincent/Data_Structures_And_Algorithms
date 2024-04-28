@@ -70,20 +70,17 @@ public:
     if(seen.find(node) == seen.end()) {
       seen.insert(node);
       for(int i = 0; i < hash_map[node].size(); i++) {
-        if(hash_map.find(hash_map[node][i]) != hash_map.end()) {
-          // new candidate node definitely has some bombs it will set off and 'i'
-          // definitely exists as a key in hash_map
-          totalBombs += dfs(hash_map[node][i], hash_map, chainReaction, max, seen);
-        } else {
-          totalBombs++;
-        }
+        if(seen.find(hash_map[node][i]) == seen.end()) {
+          if(hash_map.find(hash_map[node][i]) != hash_map.end()) {
+             totalBombs =  1 + dfs(hash_map[node][i], hash_map, chainReaction, max, seen);
+          }
+          } else {
+            totalBombs++;
+          }
       }
-      chainReaction[node] = ++totalBombs;
     }
-    else {
-      totalBombs = chainReaction[node];
-    }
-    return totalBombs;
+
+    return 1;
   }
 };
 
