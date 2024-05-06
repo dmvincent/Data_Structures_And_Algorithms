@@ -9,24 +9,14 @@ public:
   std::vector<std::vector<int>> kClosest(std::vector<std::vector<int>>& points, int k) {
     std::vector<std::vector<int>> ans;
 
-    // Store the distance of each into a hash_map with the distance being the key
-    std::unordered_map<double, std::vector<int>> distances;
+    // Push elements of points into max heap, and pop whenever elements in heap exceed k
+    std::priority_queue<std::pair<double,int>> heap;
     int i = 0;
     for(auto& e: points) {
-      double d = sqrt(pow(e[0], 2) + pow(e[1], 2));
-      distances[d].push_back(i);
+      heap.push(std::make_pair(sqrt(pow(e[0], 2) + pow(e[1], 2)), i));
+      if(heap.size() > k)
+        heap.pop();
       i++;
-    }
-    
-    // Transfer each element into a max hash_map and pop whenever size exceeds k
-    std::priority_queue<std::pair<double,int>> heap;
-    for(auto& iter: distances) {
-      for(auto innerIter: iter.second) {
-        heap.push(std::make_pair(iter.first, innerIter));
-          if(heap.size() > k) {
-            heap.pop();
-          }
-      }
     }
 
     // Transfer all elements from heap into answer vector
