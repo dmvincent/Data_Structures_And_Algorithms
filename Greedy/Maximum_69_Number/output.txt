@@ -1,0 +1,4 @@
+whole: 966
+whole: 96
+whole: 9
+Answer: 9999
