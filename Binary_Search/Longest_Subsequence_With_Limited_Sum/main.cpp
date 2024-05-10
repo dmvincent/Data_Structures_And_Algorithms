@@ -44,9 +44,8 @@ public:
 
     // Find location for maintaining sort in sorted nums array for each query
     int left, right, mid;
-    std::vector<int> runningSortedSumsLocation(queries.size(), 0);
+    //std::vector<int> runningSortedSumsLocation(queries.size(), 0);
     for(auto i = 0; i < queries.size(); i++) {
-      //max = queries[i];
       left = 0;
       right = nums.size() - 1;
       while(left <= right) {
@@ -62,16 +61,10 @@ public:
         else
           left = mid + 1;
       }
-      runningSortedSumsLocation[i] = left;
+      queries[i] = left;
     }
     
-    //// Troubleshooting: Print location where query cieling is in sorted nums array
-    //std::cout << "Query Cieling Location in sorted nums" << std::endl << "=======================" << std::endl;
-    //printVector(runningSortedSumsLocation);
-
-    
-
-    return runningSortedSumsLocation;
+    return queries;
   }
 };
 
