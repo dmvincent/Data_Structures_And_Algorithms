@@ -20,12 +20,6 @@ public:
     std::cout << "Original Nums" << std::endl << "=======================" << std::endl;
     printVector(nums);
 
-    // Create hash_map of nums values and their location
-    // for verifying subsequence constraint later on
-    std::unordered_map<int, int> hash_map;
-    for(int i = 0; i < nums.size(); i++)
-      hash_map[i] = i;
-    
     // Sort nums array
     sort(nums.begin(), nums.end());
 
@@ -33,40 +27,53 @@ public:
     std::cout << "Sorted Nums" << std::endl << "=======================" << std::endl;
     printVector(nums);
 
-    // Troubleshooting: Print the query
-    std::cout << "Query" << std::endl << "=======================" << std::endl;
-    printVector(queries);
+    // Create Vector tracking running sums in sorted_nums
+    std::vector<int> runningSortedSums(nums.size(), 0);
+    int sum = 0;
+    runningSortedSums[0] = nums[0];
+    for(int i = 1; i < nums.size(); i++) {
+      runningSortedSums[i] = runningSortedSums[i-1] + nums[i];
+    }
 
-    // Find the first element in sorted nums array
+    // Troubleshooting: Print Running Sums
+    std::cout << "Running Sorted Sums" << std::endl << "=======================" << std::endl;
+    printVector(runningSortedSums);
+
+    
+    //// Troubleshooting: Print the query
+    //std::cout << "Query" << std::endl << "=======================" << std::endl;
+    //printVector(queries);
+
+    // Find location for maintaining sort in runningSortedSums for each query
     int max, left, right, mid;
-    std::vector<int> max_loc(queries.size(), 0);
+    std::vector<int> runningSortedSumsLocation(queries.size(), 0);
     for(auto i = 0; i < queries.size(); i++) {
       max = queries[i];
       left = 0;
-      right = nums.size() - 1;
+      right = runningSortedSums.size() - 1;
       while(left <= right) {
         mid = left + (right - left)/2;
 
-        if(nums[mid] == max) {
-          left = mid;
+        if(runningSortedSums[mid] == max) {
+          left = mid + 1;
           break;
         }
 
-        if(nums[mid] >= max)
+        if(runningSortedSums[mid] >= max)
           right = mid - 1;
         else
           left = mid + 1;
       }
-      max_loc[i] = left;
+      runningSortedSumsLocation[i] = left;
     }
     
-    // Troubleshooting: Print location where query cieling is in sorted nums array
-    std::cout << "Query Cieling Location in sorted nums" << std::endl << "=======================" << std::endl;
-    printVector(max_loc);
+    //// Troubleshooting: Print location where query cieling is in sorted nums array
+    //std::cout << "Query Cieling Location in sorted nums" << std::endl << "=======================" << std::endl;
+    //printVector(runningSortedSumsLocation);
 
     
 
-    return ans;
+    return runningSortedSumsLocation;
   }
 };
 
