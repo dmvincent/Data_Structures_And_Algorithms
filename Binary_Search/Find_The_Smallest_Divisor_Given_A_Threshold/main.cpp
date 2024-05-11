@@ -6,12 +6,10 @@ class Solution {
 public:
   int smallestDivisor(std::vector<int>& nums, int threshold) {
     int left = 1;
-    int right = INT_MAX/threshold;
+    int right = INT_MAX;
 
-    int cycles = 0;
     while (left <= right) {
       int mid = left + (right-left)/2;
-      //std::cout << "Cycle: " << cycles++ << " left: " << left << " right: " << right << " mid: " << mid << std::endl;
       if(check(nums, threshold, mid)) {
         right = mid - 1;
       }
@@ -19,7 +17,6 @@ public:
         left = mid + 1;
       }
     }
-    //std::cout << "Cycles: " << cycles << std::endl;
     return left;
   }
 
@@ -27,11 +24,7 @@ public:
     int sum = 0;
     for(auto& i: nums) {
       sum += ceil((double)i/mid); 
-      //if(mid <= 9) {
-      //  //std::cout << sum << " + ";
-      //}
     }
-    //std::cout << " Result: " << sum << std::endl;
     if(sum <= threshold)
       return true;
 
@@ -40,8 +33,8 @@ public:
 };
 
 int main() {
-  std::vector<int> nums{1,2,5,9};
-  int threshold = 6;
+  //std::vector<int> nums{1,2,5,9};
+  //int threshold = 6;
 
   Solution s1;
   int ans = s1.smallestDivisor(nums, threshold);
