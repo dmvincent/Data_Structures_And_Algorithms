@@ -14,7 +14,6 @@ public:
     int limit, j;
     char currChar;
     for(int i = 0; i < digits.size(); i++) {
-      std::vector<char> temp = {};
       int num = (int)(digits[i] - 48);
       //std::cout << num << ": ";
       if(num == 7 || num == 9)
@@ -23,23 +22,18 @@ public:
         limit = 3;
       j = 0;
       while(j < limit) {
-        if(num <= 7) {
-          currChar = (char)((num - 2)*3 + j + 97);
-        } else {
-          currChar = (char)((num - 2)*3 + j + 1 + 97);
-        }
+        if(num <= 7) 
+          hash_map[i].push_back((char)((num - 2)*3 + j + 97));
+        else
+          hash_map[i].push_back((char)((num - 2)*3 + j + 1 + 97));
         
         //// Troubleshoot: Print the characters pertaining to each each digit in digits[]
         //if(j == limit - 1)
         //  std::cout << currChar << std::endl;
         //else
         //  std::cout << currChar << ", ";
-        
-        // Add the currect character to the hash map
-        temp.push_back(currChar);
         j++;
       }
-      hash_map[i] = temp;
     }
 
     //// Troublshoot: Print Hash Map
@@ -79,7 +73,7 @@ public:
 };
 
 int main() {
-  std::string digits = "";
+  std::string digits = "23";
 
   Solution s1;
   std::vector<std::string> ans = s1.letterCombinations(digits);
