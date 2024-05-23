@@ -3,12 +3,13 @@ from typing import List
 class Solution:
     def minStartValue(self, nums: List[int]) -> int:
         curr = 0
+        absMin = 0
         ans = 0
         for i in range(len(nums)):
             curr += nums[i]
-            if curr < 1:
-                ans = ans + 1 - curr
-                curr = 1
+            if curr < absMin:
+                absMin = curr
+                ans = 1 - curr
 
         if ans == 0:
             ans = 1
