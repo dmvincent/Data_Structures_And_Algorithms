@@ -1,7 +1,7 @@
 pipeline {
     agent {
         node {
-            label 'docker-agent-pytest'
+            label 'docker-agent-alpine'
         }
     }
     triggers {
