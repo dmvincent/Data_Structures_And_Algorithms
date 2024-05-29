@@ -1,6 +1,9 @@
 pipeline {
-    agent any
-
+    agent {
+        node {
+            label 'docker-agent-pytest'
+        }
+    }
     triggers {
         pollSCM '*/5 * * * *'
     }
